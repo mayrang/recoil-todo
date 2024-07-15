@@ -1,5 +1,5 @@
 import React from "react";
-import { IToDo } from "../model/todo";
+import { Categories, IToDo } from "../model/todo";
 import styled from "styled-components";
 import { useSetRecoilState } from "recoil";
 import { toDoAtom } from "../atom/todo";
@@ -41,25 +41,25 @@ export default function ToDo({ text, category, id }: IToDo) {
     } = e;
     setTodos((prev) => {
       const targetIndex = prev.findIndex((item) => item.id === id);
-      const newTodo = { text, id, category: name as any };
+      const newTodo = { text, id, category: name as Categories };
       return [...prev.slice(0, targetIndex), newTodo, ...prev.slice(targetIndex + 1)];
     });
   };
   return (
     <ToDoItem>
       <Text>{text}</Text>
-      {category !== "TO_DO" && (
-        <Button name="TO_DO" onClick={onClick}>
+      {category !== Categories.TO_DO && (
+        <Button name={Categories.TO_DO} onClick={onClick}>
           To Do
         </Button>
       )}
-      {category !== "DOING" && (
-        <Button name="DOING" onClick={onClick}>
+      {category !== Categories.DOING && (
+        <Button name={Categories.DOING} onClick={onClick}>
           Doing
         </Button>
       )}
-      {category !== "DONE" && (
-        <Button name="DONE" onClick={onClick}>
+      {category !== Categories.DONE && (
+        <Button name={Categories.DONE} onClick={onClick}>
           Done
         </Button>
       )}

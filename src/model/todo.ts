@@ -1,5 +1,11 @@
 export interface IToDo {
   text: string;
-  category: "TO_DO" | "DOING" | "DONE";
+  category: Categories;
   id: number;
+}
+
+export enum Categories {
+  "TO_DO" = "TO_DO",
+  "DOING" = "DOING",
+  "DONE" = "DONE",
 }
