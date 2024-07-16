@@ -1,8 +1,8 @@
 import React from "react";
 import { Categories, IToDo } from "../model/todo";
 import styled from "styled-components";
-import { useSetRecoilState } from "recoil";
-import { toDoAtom } from "../atom/todo";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { categoryAtom, toDoAtom } from "../atom/todo";
 
 const ToDoItem = styled.li`
   padding: 4px;
@@ -33,36 +33,52 @@ const Button = styled.button`
   color: ${(props) => props.theme.textColor};
 `;
 
-export default function ToDo({ text, category, id }: IToDo) {
-  const setTodos = useSetRecoilState(toDoAtom);
+export default function ToDo({ text, id }: IToDo) {
+  const category = useRecoilValue(categoryAtom);
+  const [todos, setTodos] = useRecoilState(toDoAtom);
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const {
       currentTarget: { name },
     } = e;
     setTodos((prev) => {
-      const targetIndex = prev.findIndex((item) => item.id === id);
-      const newTodo = { text, id, category: name as Categories };
-      return [...prev.slice(0, targetIndex), newTodo, ...prev.slice(targetIndex + 1)];
+      const prevCategory = Object.keys(prev).find((item) => item === category);
+      if (!prevCategory) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        [prevCategory]: prev[prevCategory].filter((item) => item.id !== id),
+        [name]: [{ id, text }, ...prev[name]],
+      };
+    });
+  };
+  const onDelete = () => {
+    setTodos((prev) => {
+      const currentCategory = Object.keys(prev).find((item) => item === category);
+      if (!currentCategory) {
+        return prev;
+      }
+      return {
+        ...prev,
+        [currentCategory]: prev[currentCategory].filter((item: IToDo) => item.id !== id),
+      };
     });
   };
   return (
     <ToDoItem>
       <Text>{text}</Text>
-      {category !== Categories.TO_DO && (
-        <Button name={Categories.TO_DO} onClick={onClick}>
-          To Do
-        </Button>
-      )}
-      {category !== Categories.DOING && (
-        <Button name={Categories.DOING} onClick={onClick}>
-          Doing
-        </Button>
-      )}
-      {category !== Categories.DONE && (
-        <Button name={Categories.DONE} onClick={onClick}>
-          Done
-        </Button>
-      )}
+      {Object.keys(todos).map((item) => (
+        <>
+          {item !== category && (
+            <Button name={item} onClick={onClick}>
+              {item}
+            </Button>
+          )}
+        </>
+      ))}
+
+      <Button onClick={onDelete}>X</Button>
     </ToDoItem>
   );
 }

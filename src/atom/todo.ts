@@ -1,12 +1,23 @@
 import { atom, selector } from "recoil";
-import { Categories, IToDo } from "../model/todo";
+import { Categories, ICategoryToDo, IToDo } from "../model/todo";
+import { recoilPersist } from "recoil-persist";
 
-export const toDoAtom = atom<IToDo[]>({
-  key: "todo",
-  default: [],
+const { persistAtom } = recoilPersist({
+  key: "persist-todo",
+  storage: localStorage,
 });
 
-export const categoryAtom = atom<Categories>({
+export const toDoAtom = atom<ICategoryToDo>({
+  key: "todo",
+  default: {
+    TO_DO: [],
+    DOING: [],
+    DONE: [],
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const categoryAtom = atom<Categories | string>({
   key: "todo_category",
   default: Categories.TO_DO,
 });
@@ -16,6 +27,10 @@ export const toDoSelector = selector({
   get: ({ get }) => {
     const category = get(categoryAtom);
     const todos = get(toDoAtom);
-    return todos.filter((todo) => todo.category === category);
+    const currentCategory = Object.keys(todos).find((item) => item === category);
+    if (!currentCategory) {
+      return [];
+    }
+    return todos[currentCategory];
   },
 });

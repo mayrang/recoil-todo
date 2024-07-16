@@ -1,7 +1,10 @@
 export interface IToDo {
   text: string;
-  category: Categories;
   id: number;
+}
+
+export interface ICategoryToDo {
+  [key: string | Categories]: IToDo[];
 }
 
 export enum Categories {
