@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/recoil-todo/static/css/main.31d6cfe0.css",
+    "main.js": "/recoil-todo/static/js/main.73057840.js",
+    "static/js/453.dcc4d6de.chunk.js": "/recoil-todo/static/js/453.dcc4d6de.chunk.js",
+    "index.html": "/recoil-todo/index.html",
+    "main.73057840.js.map": "/recoil-todo/static/js/main.73057840.js.map",
+    "453.dcc4d6de.chunk.js.map": "/recoil-todo/static/js/453.dcc4d6de.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.31d6cfe0.css",
+    "static/js/main.73057840.js"
+  ]
+}
